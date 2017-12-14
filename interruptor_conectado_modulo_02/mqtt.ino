@@ -1,7 +1,7 @@
 void mqtt_loop(){
   //// MQTT ////
   if (!client.connected() && millis() - lastTimeMqtt > 30000) {
-    reconnect();
+    reconnect_mqtt();
     lastTimeMqtt = millis();
   }
   
@@ -9,22 +9,18 @@ void mqtt_loop(){
     client.loop();
 }
 
-void reconnect() {
-  // Loop until we're reconnected
-    //Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
-    if (client.connect(client_id, mqtt_username, mqtt_password)) {
+void reconnect_mqtt() {
+     if (client.connect(client_id, mqtt_username, mqtt_password)) {
       //Serial.println("connected");
       client.subscribe(rele1_set_topic);
       client.subscribe(rele2_set_topic);
-      
-      char buffer[50];
-      sprintf(buffer, "{\"client_id\":\"%s\",\"ip\":\"%s\"}", client_id, WiFi.localIP().toString().c_str());
+
+      char buffer[100];
+      sprintf(buffer, "{\"client_id\":\"%s\",\"ip\":\"%s\",\"t.wifi\":\"%u\",\"m.wifi\":\"%u\",\"t.mqtt\":\"%u\",\"m.mqtt\":\"%u\"}", client_id, WiFi.localIP().toString().c_str(), tentativaWifi, lastTimeWifi, tentativaMqtt, lastTimeMqtt);
       client.publish(start_state_topic, buffer);
+      tentativaMqtt = 1;
     } else {
-      //Serial.print("failed, rc=");
-      //Serial.print(client.state());
-      //Serial.println(" try again in 5 seconds");
+      tentativaMqtt++;
     }
 }
 

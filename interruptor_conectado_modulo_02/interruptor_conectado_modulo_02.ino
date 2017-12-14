@@ -31,10 +31,11 @@ const char* ssid = "";
 const char* password = "";
 
 //// MQTT ////
-const char* mqtt_server = "";
+const char* mqtt_server = "192.168.1.16";
 const char* mqtt_username = "";
 const char* mqtt_password = "";
-long lastTimeMqtt = 60001;
+long lastTimeMqtt = 0;
+int tentativaMqtt = 1;
 const char* client_id = "esp-01-icm02"; // Must be unique on the MQTT network
 const char* start_state_topic = "casa/icm02/start";
 const char* rele1_state_topic = "casa/icm02/rele1";
@@ -48,7 +49,8 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 //// WIFI ////
-long lastTimeWifi = 60001;
+long lastTimeWifi = 0;
+int tentativaWifi = 1;
 
 //// Atuadores Relay ////
 const byte pinRele1 = 0;
